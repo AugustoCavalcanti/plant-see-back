@@ -14,3 +14,8 @@ class Choice(models.Model):
 
     def __str__(self):
         return '%d: %s' % (self.id, self.choice_text)
+    
+
+class Answer(models.Model):
+    acertos = models.IntegerField(null=False, blank=False)
+    choices = models.ManyToManyField(Choice)

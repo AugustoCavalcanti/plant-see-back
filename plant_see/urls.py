@@ -20,12 +20,12 @@ from rest_framework import routers
 from perguntas import views
 
 router = routers.DefaultRouter()
-router.register(r'users', views.UserViewSet)
-router.register(r'groups', views.GroupViewSet)
 router.register(r'questions', views.QuestionViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(router.urls)),
     path('api-auth/', include('rest_framework.urls')),
+    path('api/questions_register/', views.QuestionRegister.as_view(), name='questions_register'),
+    path('api/answer/<int:pk>/', views.answer_detail, name='answer_detail'),
 ]

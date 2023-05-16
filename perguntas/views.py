@@ -1,26 +1,14 @@
-from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
 from rest_framework import permissions
-from .serializers import UserSerializer, GroupSerializer, QuestionSerializer
-from .models import Question
-
-
-class UserViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows users to be viewed or edited.
-    """
-    queryset = User.objects.all().order_by('-date_joined')
-    serializer_class = UserSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-
-class GroupViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows groups to be viewed or edited.
-    """
-    queryset = Group.objects.all()
-    serializer_class = GroupSerializer
-    permission_classes = [permissions.IsAuthenticated]
+from .serializers import QuestionSerializer, AnswerSerializer
+from .models import Question, Choice, Answer
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework import permissions
+from django.http.response import JsonResponse
+from rest_framework.parsers import JSONParser 
 
 
 class QuestionViewSet(viewsets.ModelViewSet):
@@ -30,3 +18,43 @@ class QuestionViewSet(viewsets.ModelViewSet):
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
     permission_classes = [permissions.AllowAny]
+
+
+@permission_classes((permissions.AllowAny,))
+class QuestionRegister(APIView):
+
+    def post(self, request, format=None):
+        dados = request.data
+        ids = []
+        total_acertos = 0
+        for x in dados:
+            ids.append(dados[x])
+
+        alternativas = Choice.objects.filter(id__in=ids)
+
+        for alternativa in alternativas:
+            if alternativa.correct:
+                total_acertos += 1
+
+        resposta = Answer(acertos=total_acertos)
+        resposta.save()
+        resposta.choices.set(alternativas)
+
+        porcentagem = (Answer.objects.filter(acertos__lt=total_acertos).count() * 100) / Answer.objects.count()
+
+        return JsonResponse({'resposta': resposta.id}, status=status.HTTP_201_CREATED)
+ 
+
+@api_view(['GET'])
+def answer_detail(request, pk):
+    """
+    Retrieve, update or delete a code snippet.
+    """
+    try:
+        answer = Answer.objects.get(pk=pk)
+    except Answer.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = AnswerSerializer(answer)
+        return Response(serializer.data)
