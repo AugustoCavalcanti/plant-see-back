@@ -19,3 +19,4 @@ class Choice(models.Model):
 class Answer(models.Model):
     acertos = models.IntegerField(null=False, blank=False)
     choices = models.ManyToManyField(Choice)
+    porcentagem = models.FloatField(null=True, blank=True)

@@ -36,16 +36,16 @@ class QuestionRegister(APIView):
             if alternativa.correct:
                 total_acertos += 1
 
-        resposta = Answer(acertos=total_acertos)
+        porcentagem = round((Answer.objects.filter(acertos__lt=total_acertos).count() * 100) / Answer.objects.count())
+        resposta = Answer(acertos=total_acertos, porcentagem=porcentagem)
         resposta.save()
         resposta.choices.set(alternativas)
-
-        porcentagem = (Answer.objects.filter(acertos__lt=total_acertos).count() * 100) / Answer.objects.count()
 
         return JsonResponse({'resposta': resposta.id}, status=status.HTTP_201_CREATED)
  
 
 @api_view(['GET'])
+@permission_classes((permissions.AllowAny,))
 def answer_detail(request, pk):
     """
     Retrieve, update or delete a code snippet.

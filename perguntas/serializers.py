@@ -18,4 +18,4 @@ class AnswerSerializer(serializers.HyperlinkedModelSerializer):
     choices = ChoiceSerializer(many=True, read_only=True)
     class Meta:
         model = Answer
-        fields = ['acertos', 'choices']
+        fields = ['acertos', 'porcentagem', 'choices']
