@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-iqmo=#3!i2gr91)re4u*en=ott2@*i8=w42f&o)7%ub)!!n$@$
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -120,7 +120,11 @@ REST_FRAMEWORK = {
 
 CORS_ORIGIN_ALLOW_ALL = True 
 
-CORS_ALLOW_CREDENTIALS = True
+# CORS_ALLOW_CREDENTIALS = False
+
+# CORS_ORIGIN_WHITELIST = (
+#     'http://localhost:3000',
+# )
 
 CORS_ALLOW_METHODS = [
     "DELETE",

@@ -14,8 +14,8 @@ class QuestionSerializer(serializers.HyperlinkedModelSerializer):
         model = Question
         fields = ['id', 'question_text', 'pub_date', 'img_url', 'alternativas']
 
-
 class AnswerSerializer(serializers.HyperlinkedModelSerializer):
+    choices = ChoiceSerializer(many=True, read_only=True)
     class Meta:
         model = Answer
         fields = ['acertos', 'choices']
