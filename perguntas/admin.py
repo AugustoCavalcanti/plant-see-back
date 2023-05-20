@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Question, Choice
+from .models import Question, Choice, Answer
 
 class ChoiceInline(admin.TabularInline):
     model = Choice
@@ -11,3 +11,8 @@ class QuestionAdmin(admin.ModelAdmin):
     list_filter = ['question_text', 'pub_date']
     search_fields = ['question_text']
     inlines = [ChoiceInline]
+
+
+@admin.register(Answer)
+class AnswerAdmin(admin.ModelAdmin):
+    pass

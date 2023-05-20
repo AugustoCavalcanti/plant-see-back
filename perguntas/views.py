@@ -36,7 +36,7 @@ class QuestionRegister(APIView):
             if alternativa.correct:
                 total_acertos += 1
 
-        porcentagem = round((Answer.objects.filter(acertos__lt=total_acertos).count() * 100) / Answer.objects.count())
+        porcentagem = round((Answer.objects.filter(acertos__lte=total_acertos).count() * 100) / Answer.objects.count())
         resposta = Answer(acertos=total_acertos, porcentagem=porcentagem)
         resposta.save()
         resposta.choices.set(alternativas)
